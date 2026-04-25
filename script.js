@@ -2,6 +2,9 @@
 (() => {
     'use strict';
 
+    // ── GitHub Config ──
+    const GITHUB_USERNAME = '12vicky08';
+
     // ── Touch device detection ──
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
@@ -22,19 +25,22 @@
     }
 
     // ── Scroll-reveal via Intersection Observer ──
-    const revealEls = document.querySelectorAll('.reveal');
-    const revealObserver = new IntersectionObserver(
-        (entries) => {
-            entries.forEach((entry, i) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => entry.target.classList.add('visible'), i * 80);
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        },
-        { threshold: 0.15 }
-    );
-    revealEls.forEach((el) => revealObserver.observe(el));
+    function initRevealObserver() {
+        const revealEls = document.querySelectorAll('.reveal:not(.visible)');
+        const revealObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry, i) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.15 }
+        );
+        revealEls.forEach((el) => revealObserver.observe(el));
+    }
+    initRevealObserver();
 
     // ── Navbar scroll state ──
     const navbar = document.getElementById('navbar');
@@ -115,32 +121,35 @@
     });
 
     // ── Tilt effect on skill & project cards (desktop only) ──
-    if (!isTouchDevice) {
-        const tiltCards = document.querySelectorAll('.skill-card, .project-card');
-        tiltCards.forEach((card) => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -4;
-                const rotateY = ((x - centerX) / centerX) * 4;
-                card.style.transform = `translateY(-6px) perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    function initTiltEffect() {
+        if (!isTouchDevice) {
+            const tiltCards = document.querySelectorAll('.skill-card, .project-card');
+            tiltCards.forEach((card) => {
+                if (card.dataset.tiltInit) return; // skip already initialized
+                card.dataset.tiltInit = 'true';
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -4;
+                    const rotateY = ((x - centerX) / centerX) * 4;
+                    card.style.transform = `translateY(-6px) perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                });
             });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = '';
-            });
-        });
+        }
     }
+    initTiltEffect();
 
     // ── Typing animation for hero title ──
     const heroTitle = document.querySelector('.hero-title');
     if (heroTitle) {
         const roles = [
-            'CSE Student & Aspiring Developer',
-            'Python & Java Enthusiast',
-            'Building Clean Digital Experiences',
+            'Computer Science Student',
             'Algorithms · Web Dev · Problem Solving'
         ];
         let roleIdx = 0;
@@ -186,25 +195,53 @@
         });
     });
 
-    // ── Contact form ──
+    // ── Contact form with Formspree AJAX ──
     const form = document.getElementById('contact-form');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const btn = form.querySelector('.btn-submit');
-        const span = btn.querySelector('span');
-        const origText = span.textContent;
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = form.querySelector('.btn-submit');
+            const span = btn.querySelector('span');
+            const origText = span.textContent;
 
-        span.textContent = 'Sent! 🎉';
-        btn.style.background = 'linear-gradient(135deg, #28c840, #2ecc71)';
-        btn.style.boxShadow = '0 4px 20px rgba(40, 200, 64, 0.3)';
+            const formData = new FormData(form);
+            
+            try {
+                btn.disabled = true;
+                span.textContent = 'Sending...';
 
-        setTimeout(() => {
-            span.textContent = origText;
-            btn.style.background = '';
-            btn.style.boxShadow = '';
-            form.reset();
-        }, 3000);
-    });
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    span.textContent = 'Sent! ✓';
+                    btn.style.opacity = '0.7';
+                    form.reset();
+                } else {
+                    const data = await response.json();
+                    if (data.errors) {
+                        span.textContent = data.errors.map(error => error.message).join(", ");
+                    } else {
+                        throw new Error('Form submission failed');
+                    }
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                span.textContent = 'Error! ✗';
+            } finally {
+                setTimeout(() => {
+                    span.textContent = origText;
+                    btn.style.opacity = '';
+                    btn.disabled = false;
+                }, 3000);
+            }
+        });
+    }
 
     // ── Magnetic effect on social links (desktop only) ──
     if (!isTouchDevice) {
@@ -220,5 +257,136 @@
             });
         });
     }
+
+    // ── Curated Projects + GitHub Repos ──
+    const CURATED_PROJECTS = [
+        {
+            name: 'Net Duel — Puzzle Game',
+            description: 'A Java Swing network puzzle game with DFS maze generation, BFS connectivity, greedy CPU AI, and a Human vs Computer duel mode.',
+            tags: ['Java', 'Swing', 'Graph Algorithms', 'AI'],
+            url: 'https://github.com/12vicky08/dSA'
+        },
+        {
+            name: 'WSN Routing Optimizer',
+            description: 'NS-3 simulation data pipeline analyzing wireless sensor network routing algorithms with Pandas, Seaborn visualization, and energy metrics.',
+            tags: ['Python', 'NS-3', 'Pandas', 'Data Viz'],
+            url: '#'
+        },
+        {
+            name: 'ZenHeal — Healthcare UI',
+            description: 'A user interface design project for a healthcare website focused on accessibility, clean design, and patient-centric navigation.',
+            tags: ['HTML', 'CSS', 'UI/UX'],
+            url: 'https://github.com/12vicky08/ZenHeal-team11'
+        },
+        {
+            name: 'Weather Analysis Dashboard',
+            description: 'An algorithm-driven weather analysis dashboard built with segment trees for efficient range queries and data visualization.',
+            tags: ['Python', 'Segment Trees', 'Algorithms'],
+            url: 'https://github.com/12vicky08/weather-analysis-dashboard'
+        },
+
+        {
+            name: 'Django Todo App',
+            description: 'A full-stack Django to-do application with SQLite database, admin interface, Docker containerization, and Gunicorn/WhiteNoise serving.',
+            tags: ['Python', 'Django', 'Docker', 'SQLite'],
+            url: 'https://github.com/12vicky08/django'
+        }
+    ];
+
+    function renderProjectCard(container, { name, description, tags, url }, index) {
+        const card = document.createElement('article');
+        card.className = 'project-card reveal';
+        card.style.transitionDelay = `${0.05 + index * 0.07}s`;
+
+        const tagsHtml = tags.map(t => `<span>${t}</span>`).join('');
+
+        card.innerHTML = `
+            <div class="project-scanline"></div>
+            <div class="project-info">
+                <h3>${name}</h3>
+                <p>${description}</p>
+                <div class="project-tags">
+                    ${tagsHtml}
+                </div>
+                <a href="${url}" target="_blank" class="project-execute-btn">
+                    [EXECUTE <span class="arrow">→</span>]
+                </a>
+            </div>
+        `;
+
+        container.appendChild(card);
+    }
+
+    async function loadProjects() {
+        const container = document.getElementById('projects-container');
+        const loading = document.getElementById('projects-loading');
+
+        // Remove loading message
+        if (loading) loading.remove();
+
+        // 1. Render curated projects first
+        CURATED_PROJECTS.forEach((proj, i) => renderProjectCard(container, proj, i));
+
+        // 2. Fetch remaining GitHub repos and append any not already curated
+        const curatedUrls = new Set(CURATED_PROJECTS.map(p => p.url.toLowerCase()));
+        const HIDDEN_REPOS = new Set(['portfolio', '12vicky08', 'expos']);
+
+        try {
+            const response = await fetch(
+                `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`
+            );
+
+            if (response.ok) {
+                const repos = await response.json();
+
+                repos.forEach((repo, idx) => {
+                    // Skip if already in curated list or hidden
+                    if (curatedUrls.has(repo.html_url.toLowerCase())) return;
+                    if (HIDDEN_REPOS.has(repo.name.toLowerCase())) return;
+
+                    const description = repo.description || 'No description available.';
+                    const language = repo.language || '';
+                    const topics = repo.topics || [];
+
+                    const tags = [];
+                    if (language) tags.push(language);
+                    topics.forEach(t => {
+                        if (t.toLowerCase() !== language.toLowerCase()) tags.push(t);
+                    });
+
+                    const displayName = repo.name
+                        .replace(/[-_]/g, ' ')
+                        .replace(/\b\w/g, c => c.toUpperCase());
+
+                    renderProjectCard(container, {
+                        name: displayName,
+                        description,
+                        tags: tags.slice(0, 4),
+                        url: repo.html_url
+                    }, CURATED_PROJECTS.length + idx);
+                });
+            }
+        } catch (error) {
+            console.error('Failed to fetch GitHub repos:', error);
+        }
+
+        // Update the "Projects" stat counter
+        const totalCards = container.querySelectorAll('.project-card').length;
+        const projectStat = document.querySelector('.stat-number[data-count]');
+        if (projectStat && projectStat.closest('.stat')) {
+            const label = projectStat.closest('.stat').querySelector('.stat-label');
+            if (label && label.textContent.trim() === 'Projects') {
+                projectStat.dataset.count = totalCards;
+                projectStat.textContent = totalCards;
+            }
+        }
+
+        // Re-init reveal observer & tilt for new cards
+        initRevealObserver();
+        initTiltEffect();
+    }
+
+    // Load projects on page load
+    loadProjects();
 
 })();

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>R Vikranth — Resume</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    /* ===== Reset ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ===== Abey Resume Template — LaTeX-Inspired Stylesheet ===== */
+    /* Colors from the template:
+       darkcolor: #0F4539 (headings, accent)
+       cvblue:    #0E5484 (heading rule)
+       black:     #130810 (name)
+       SlateGrey: #2E2E2E (emphasis)
+       LightGrey: #666666 (body text)
+    */
+
+    body {
+      font-family: 'Computer Modern Serif', 'CMU Serif', 'Latin Modern Roman',
+                   'Times New Roman', 'Georgia', serif;
+      font-size: 11pt;
+      line-height: 1.35;
+      color: #130810;
+      background: #e8e8e8;
+    }
+
+    a {
+      color: #0F4539;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== A4 Page ===== */
+    .resume-page {
+      width: 8.5in;
+      min-height: 11in;
+      margin: 20px auto;
+      padding: 0.30in 0.45in 0.30in 0.40in;
+      background: #fff;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+    }
+
+    /* ===== Header / Heading ===== */
+    .resume-header {
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .resume-header h1 {
+      font-size: 26pt;
+      font-weight: 400;
+      font-variant: small-caps;
+      letter-spacing: 1.5px;
+      color: #130810;
+      margin-bottom: 1pt;
+    }
+
+    .resume-header .location {
+      font-size: 10pt;
+      color: #130810;
+      margin-bottom: 1pt;
+    }
+
+    .resume-header .contact-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 9.5pt;
+      margin-top: 1pt;
+    }
+
+    .resume-header .contact-links a {
+      color: #130810;
+      text-decoration: underline;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .resume-header .contact-links .sep {
+      color: #130810;
+      margin: 0 2px;
+      text-decoration: none;
+    }
+
+    .resume-header .contact-links i {
+      font-size: 9pt;
+      color: #130810;
+      position: relative;
+      top: -0.5px;
+    }
+
+    /* ===== Section ===== */
+    .resume-section {
+      margin-top: 6px;
+      margin-bottom: 2px;
+    }
+
+    .resume-section h2 {
+      font-size: 12.5pt;
+      font-weight: 700;
+      font-variant: small-caps;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #0F4539;
+      padding-bottom: 1px;
+      border-bottom: 1px solid #130810;
+      margin-bottom: 4px;
+    }
+
+    /* ===== Education Entry ===== */
+    .edu-entry {
+      margin-bottom: 2px;
+    }
+
+    .entry-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .entry-row .left {
+      font-size: 11.5pt;
+      font-weight: 700;
+      color: #130810;
+    }
+
+    .entry-row .right {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #130810;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .entry-sub-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .entry-sub-row .left {
+      font-size: 11pt;
+      font-style: italic;
+      color: #130810;
+    }
+
+    .entry-sub-row .right {
+      font-size: 10pt;
+      font-style: italic;
+      color: #130810;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* ===== Coursework / Skills Grid ===== */
+    .coursework-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px 0;
+      padding-left: 18px;
+      margin-top: 2px;
+    }
+
+    .coursework-grid li {
+      font-size: 10pt;
+      color: #130810;
+      list-style-type: disc;
+      padding-left: 4px;
+      line-height: 1.6;
+    }
+
+    .coursework-grid li::marker {
+      font-size: 6pt;
+    }
+
+    /* ===== Project Entry ===== */
+    .project-entry {
+      margin-bottom: 5px;
+    }
+
+    .project-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .project-heading .project-left {
+      font-size: 10.5pt;
+    }
+
+    .project-heading .project-left .project-name {
+      font-weight: 700;
+      font-size: 11.5pt;
+      text-decoration: underline;
+      color: #130810;
+    }
+
+    .project-heading .project-left .project-name a {
+      color: #130810;
+      text-decoration: underline;
+    }
+
+    .project-heading .project-left .ext-link {
+      color: #0E5484;
+      font-size: 9pt;
+      margin-left: 2px;
+      text-decoration: none;
+    }
+
+    .project-heading .project-left .pipe {
+      margin: 0 5px;
+      font-weight: 400;
+      color: #130810;
+    }
+
+    .project-heading .project-left .tech-stack {
+      text-decoration: underline;
+      font-size: 11pt;
+      color: #130810;
+    }
+
+    .project-heading .project-date {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #130810;
+      white-space: nowrap;
+    }
+
+    /* ===== Bullet Lists ===== */
+    .bullet-list {
+      list-style: none;
+      padding-left: 18px;
+      margin-top: 1px;
+    }
+
+    .bullet-list li {
+      position: relative;
+      padding-left: 12px;
+      font-size: 10pt;
+      color: #130810;
+      line-height: 1.45;
+      margin-bottom: 0px;
+    }
+
+    .bullet-list li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      font-size: 7pt;
+      top: 2px;
+      color: #130810;
+    }
+
+    .bullet-list li strong {
+      font-weight: 700;
+    }
+
+    /* ===== Technical Skills ===== */
+    .skills-block {
+      padding-left: 4px;
+      margin-top: 1px;
+    }
+
+    .skills-block .skill-line {
+      font-size: 10pt;
+      color: #130810;
+      line-height: 1.55;
+    }
+
+    .skills-block .skill-line strong {
+      font-weight: 700;
+    }
+
+    /* ===== Extracurricular / Activity Entry ===== */
+    .activity-entry {
+      margin-bottom: 5px;
+    }
+
+    /* ===== Certifications Multi-Column ===== */
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px 0;
+      padding-left: 18px;
+      margin-top: 2px;
+    }
+
+    .cert-grid li {
+      font-size: 10pt;
+      color: #130810;
+      list-style-type: disc;
+      padding-left: 4px;
+      line-height: 1.6;
+    }
+
+    .cert-grid li::marker {
+      font-size: 6pt;
+    }
+
+    /* ===== Placeholder ===== */
+    .placeholder {
+      font-size: 10pt;
+      color: #999;
+      font-style: italic;
+      padding: 4px 0 4px 18px;
+    }
+
+    /* ===== Print ===== */
+    @media print {
+      body { background: #fff; }
+      .resume-page {
+        margin: 0;
+        padding: 0.20in 0.40in;
+        box-shadow: none;
+        width: 100%;
+        min-height: auto;
+      }
+      .no-print { display: none !important; }
+    }
+
+    /* ===== Action Buttons ===== */
+    .resume-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px 0;
+    }
+
+    .resume-actions .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      font-size: 10pt;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-download { background: #0F4539; color: #fff; }
+    .btn-download:hover { background: #0a3028; transform: translateY(-1px); }
+
+    .btn-back { background: #e0e0e0; color: #333; text-decoration: none; }
+    .btn-back:hover { background: #d0d0d0; transform: translateY(-1px); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Action Bar -->
+  <div class="resume-actions no-print">
+    <a href="index.html" class="action-btn btn-back">
+      <i class="fas fa-arrow-left"></i> Back to Portfolio
+    </a>
+    <button onclick="window.print()" class="action-btn btn-download">
+      <i class="fas fa-download"></i> Download PDF
+    </button>
+  </div>
+
+  <!-- ===== RESUME PAGE ===== -->
+  <div class="resume-page">
+
+    <!-- ══════ HEADING ══════ -->
+    <header class="resume-header">
+      <h1>R Vikranth</h1>
+      <p class="location">India</p>
+      <div class="contact-links">
+        <a href="mailto:vikranthras@gmail.com"><i class="fas fa-envelope"></i> vikranthras@gmail.com</a>
+        <span class="sep">~</span>
+        <a href="https://github.com/12vicky08" target="_blank"><i class="fab fa-github"></i> 12vicky08</a>
+        <span class="sep">~</span>
+        <a href="https://portfolio-12vicky08.vercel.app" target="_blank"><i class="fas fa-globe"></i> Portfolio</a>
+      </div>
+    </header>
+
+    <!-- ══════ EDUCATION ══════ -->
+    <section class="resume-section">
+      <h2>Education</h2>
+      <div class="edu-entry">
+        <div class="entry-row">
+          <span class="left">Amrita Vishwa Vidyapeetham</span>
+          <span class="right">Aug 2024 – May 2028</span>
+        </div>
+        <div class="entry-sub-row">
+          <span class="left">B.Tech in Computer Science &amp; Engineering – <strong>CGPA</strong> – <strong>6.76</strong></span>
+          <span class="right">Coimbatore</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════ COURSEWORK / SKILLS ══════ -->
+    <section class="resume-section">
+      <h2>Coursework / Skills</h2>
+      <ul class="coursework-grid">
+        <li>Data Structures &amp; Algorithms</li>
+        <li>Operating Systems</li>
+        <li>Web Development</li>
+        <li>Computer Architecture</li>
+        <li>Object-Oriented Programming</li>
+        <li>Database Management</li>
+        <li>Systems Programming</li>
+        <li>Computer Networks</li>
+      </ul>
+    </section>
+
+    <!-- ══════ PROJECTS ══════ -->
+    <section class="resume-section">
+      <h2>Projects</h2>
+
+      <!-- Project 1 -->
+      <div class="project-entry">
+        <div class="project-heading">
+          <div class="project-left">
+            <span class="project-name"><a href="https://github.com/12vicky08/dSA" target="_blank">Net Duel — Puzzle Game</a></span>
+            <a href="https://github.com/12vicky08/dSA" target="_blank" class="ext-link"><i class="fas fa-external-link-alt"></i></a>
+            <span class="pipe">|</span>
+            <span class="tech-stack">Java, Swing, Graph Algorithms, AI</span>
+          </div>
+          <span class="project-date">2025</span>
+        </div>
+        <ul class="bullet-list">
+          <li>Built a Java Swing network puzzle game featuring <strong>DFS maze generation</strong>, <strong>BFS connectivity</strong> checking, and greedy CPU AI for Human vs Computer duel mode.</li>
+          <li>Implemented multiple <strong>graph traversal algorithms</strong> to power real-time game logic and intelligent opponent behaviour.</li>
+        </ul>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-entry">
+        <div class="project-heading">
+          <div class="project-left">
+            <span class="project-name"><a href="https://github.com/12vicky08/weather-analysis-dashboard" target="_blank">Weather Analysis Dashboard</a></span>
+            <a href="https://github.com/12vicky08/weather-analysis-dashboard" target="_blank" class="ext-link"><i class="fas fa-external-link-alt"></i></a>
+            <span class="pipe">|</span>
+            <span class="tech-stack">Python, Segment Trees, Algorithms</span>
+          </div>
+          <span class="project-date">2025</span>
+        </div>
+        <ul class="bullet-list">
+          <li>Developed an algorithm-driven weather analysis dashboard leveraging <strong>segment trees</strong> for efficient range queries over large time-series datasets.</li>
+          <li>Designed data visualization components to present temperature, humidity, and weather pattern analytics in an interactive interface.</li>
+        </ul>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="project-entry">
+        <div class="project-heading">
+          <div class="project-left">
+            <span class="project-name">WSN Routing Optimizer</span>
+            <span class="pipe">|</span>
+            <span class="tech-stack">Python, NS-3, Pandas, Data Visualization</span>
+          </div>
+          <span class="project-date">2025</span>
+        </div>
+        <ul class="bullet-list">
+          <li>Created an <strong>NS-3 simulation data pipeline</strong> for analyzing wireless sensor network routing algorithms, processing simulation output with Pandas.</li>
+          <li>Generated <strong>Seaborn-based visualizations</strong> for energy consumption metrics, enabling comparative evaluation of routing protocols.</li>
+        </ul>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="project-entry">
+        <div class="project-heading">
+          <div class="project-left">
+            <span class="project-name"><a href="https://github.com/12vicky08/django" target="_blank">Django Todo App</a></span>
+            <a href="https://github.com/12vicky08/django" target="_blank" class="ext-link"><i class="fas fa-external-link-alt"></i></a>
+            <span class="pipe">|</span>
+            <span class="tech-stack">Python, Django, Docker, SQLite</span>
+          </div>
+          <span class="project-date">2025</span>
+        </div>
+        <ul class="bullet-list">
+          <li>Built a <strong>full-stack Django</strong> to-do application with SQLite database, admin interface, and <strong>Docker containerization</strong> for portable deployment.</li>
+          <li>Configured production-ready serving with <strong>Gunicorn</strong> and <strong>WhiteNoise</strong> for static file handling.</li>
+        </ul>
+      </div>
+
+      <!-- Project 5 -->
+      <div class="project-entry">
+        <div class="project-heading">
+          <div class="project-left">
+            <span class="project-name"><a href="https://github.com/12vicky08/ZenHeal-team11" target="_blank">ZenHeal — Healthcare UI</a></span>
+            <a href="https://github.com/12vicky08/ZenHeal-team11" target="_blank" class="ext-link"><i class="fas fa-external-link-alt"></i></a>
+            <span class="pipe">|</span>
+            <span class="tech-stack">HTML, CSS, UI/UX</span>
+          </div>
+          <span class="project-date">2025</span>
+        </div>
+        <ul class="bullet-list">
+          <li>Designed and developed a <strong>healthcare website UI</strong> focused on accessibility, clean design principles, and patient-centric navigation flows.</li>
+          <li>Implemented <strong>responsive layouts</strong> and modern CSS techniques to ensure cross-device compatibility and smooth user experience.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══════ TECHNICAL SKILLS ══════ -->
+    <section class="resume-section">
+      <h2>Technical Skills</h2>
+      <div class="skills-block">
+        <p class="skill-line"><strong>Languages:</strong> Python, Java, C, JavaScript, Haskell, SQL, HTML5, CSS3</p>
+        <p class="skill-line"><strong>Developer Tools:</strong> VS Code, Git, GitHub, Docker, Linux, Shell, Arduino IDE</p>
+        <p class="skill-line"><strong>Technologies/Frameworks:</strong> Django, Pandas, Matplotlib, Segment Trees, eXpOS, Arduino / IoT, Responsive Web Design</p>
+      </div>
+    </section>
+    <!-- ══════ CERTIFICATIONS ══════ -->
+    <section class="resume-section">
+      <h2>Certifications</h2>
+      <ul class="cert-grid">
+        <li>Getting Started with Artificial Intelligence – IBM SkillsBuild (March 2026)</li>
+      </ul>
+    </section>
+
+  </div>
+
+</body>
+</html>
