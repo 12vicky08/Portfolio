@@ -270,7 +270,7 @@
             name: 'WSN Routing Optimizer',
             description: 'NS-3 simulation data pipeline analyzing wireless sensor network routing algorithms with Pandas, Seaborn visualization, and energy metrics.',
             tags: ['Python', 'NS-3', 'Pandas', 'Data Viz'],
-            url: '#'
+            url: 'https://github.com/12vicky08/wsn-routing-optimizer'
         },
         {
             name: 'ZenHeal — Healthcare UI',
