@@ -108,9 +108,16 @@
 
     // ── Hero parallax ──
     const heroBg = document.querySelector('.hero-bg');
+    let ticking = false;
     window.addEventListener('scroll', () => {
-        if (window.scrollY < window.innerHeight) {
-            heroBg.style.transform = `translateY(${window.scrollY * 0.35}px)`;
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                if (window.scrollY < window.innerHeight) {
+                    heroBg.style.transform = `translateY(${window.scrollY * 0.35}px)`;
+                }
+                ticking = false;
+            });
+            ticking = true;
         }
     });
 
