@@ -175,17 +175,6 @@
         setTimeout(typeLoop, 1200);
     }
 
-    // ── Smooth scroll for all anchor links ──
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
-
     // ── Contact form ──
     const form = document.getElementById('contact-form');
     form.addEventListener('submit', (e) => {
