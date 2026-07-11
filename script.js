@@ -125,8 +125,12 @@
             tiltCards.forEach((card) => {
                 if (card.dataset.tiltInit) return; // skip already initialized
                 card.dataset.tiltInit = 'true';
+                let rect = null;
+                card.addEventListener('mouseenter', () => {
+                    rect = card.getBoundingClientRect();
+                });
                 card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
+                    if (!rect) rect = card.getBoundingClientRect();
                     const x = e.clientX - rect.left;
                     const y = e.clientY - rect.top;
                     const centerX = rect.width / 2;
@@ -136,6 +140,7 @@
                     card.style.transform = `translateY(-6px) perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
                 });
                 card.addEventListener('mouseleave', () => {
+                    rect = null;
                     card.style.transform = '';
                 });
             });
@@ -244,13 +249,18 @@
     // ── Magnetic effect on social links (desktop only) ──
     if (!isTouchDevice) {
         document.querySelectorAll('.social-link').forEach((link) => {
+            let rect = null;
+            link.addEventListener('mouseenter', () => {
+                rect = link.getBoundingClientRect();
+            });
             link.addEventListener('mousemove', (e) => {
-                const rect = link.getBoundingClientRect();
+                if (!rect) rect = link.getBoundingClientRect();
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
                 link.style.transform = `translateY(-3px) translate(${x * 0.2}px, ${y * 0.2}px)`;
             });
             link.addEventListener('mouseleave', () => {
+                rect = null;
                 link.style.transform = '';
             });
         });
