@@ -42,12 +42,35 @@
     }
     initRevealObserver();
 
-    // ── Navbar scroll state ──
+    // ── Optimized Scroll & Resize Handlers ──
     const navbar = document.getElementById('navbar');
+    const heroBg = document.querySelector('.hero-bg');
+
+    let isTicking = false;
+    let cachedWinHeight = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        cachedWinHeight = window.innerHeight;
+    }, { passive: true });
+
     window.addEventListener('scroll', () => {
-        const y = window.scrollY;
-        navbar.classList.toggle('scrolled', y > 50);
-    });
+        if (!isTicking) {
+            window.requestAnimationFrame(() => {
+                const y = window.scrollY;
+
+                // Navbar scroll state
+                navbar.classList.toggle('scrolled', y > 50);
+
+                // Hero parallax
+                if (heroBg && y < cachedWinHeight) {
+                    heroBg.style.transform = `translateY(${y * 0.35}px)`;
+                }
+
+                isTicking = false;
+            });
+            isTicking = true;
+        }
+    }, { passive: true });
 
     // ── Mobile menu toggle ──
     const menuToggle = document.getElementById('menu-toggle');
@@ -109,14 +132,6 @@
         { threshold: 0.5 }
     );
     counters.forEach((c) => counterObserver.observe(c));
-
-    // ── Hero parallax ──
-    const heroBg = document.querySelector('.hero-bg');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY < window.innerHeight) {
-            heroBg.style.transform = `translateY(${window.scrollY * 0.35}px)`;
-        }
-    });
 
     // ── Tilt effect on skill & project cards (desktop only) ──
     function initTiltEffect() {
