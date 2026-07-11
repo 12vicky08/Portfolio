@@ -363,9 +363,18 @@
                         url: repo.html_url
                     }, CURATED_PROJECTS.length + idx);
                 });
+            } else {
+                throw new Error(`Failed to fetch repos. Status: ${response.status}`);
             }
         } catch (error) {
             console.error('Failed to fetch GitHub repos:', error);
+            const errorMsg = document.createElement('p');
+            errorMsg.className = 'section-subtitle';
+            errorMsg.style.gridColumn = '1 / -1';
+            errorMsg.style.marginBottom = '0';
+            errorMsg.style.color = '#ef4444'; // A soft red for errors
+            errorMsg.textContent = 'Failed to load projects from GitHub. Please try again later.';
+            container.appendChild(errorMsg);
         }
 
         // Update the "Projects" stat counter
