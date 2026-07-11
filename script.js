@@ -244,14 +244,19 @@
     // ── Magnetic effect on social links (desktop only) ──
     if (!isTouchDevice) {
         document.querySelectorAll('.social-link').forEach((link) => {
+            let rect = null;
+            link.addEventListener('mouseenter', () => {
+                rect = link.getBoundingClientRect();
+            });
             link.addEventListener('mousemove', (e) => {
-                const rect = link.getBoundingClientRect();
+                if (!rect) rect = link.getBoundingClientRect();
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
                 link.style.transform = `translateY(-3px) translate(${x * 0.2}px, ${y * 0.2}px)`;
             });
             link.addEventListener('mouseleave', () => {
                 link.style.transform = '';
+                rect = null;
             });
         });
     }
