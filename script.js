@@ -2,6 +2,28 @@
 (() => {
     'use strict';
 
+    const CONFIG = {
+        REVEAL_STAGGER_MS: 80,
+        REVEAL_THRESHOLD: 0.15,
+        NAVBAR_SCROLL_THRESHOLD: 50,
+        NAV_HIGHLIGHT_MARGIN: '-40% 0px -55% 0px',
+        STATS_DURATION_MS: 1600,
+        STATS_THRESHOLD: 0.5,
+        PARALLAX_FACTOR: 0.35,
+        TILT_ROTATION_X: -4,
+        TILT_ROTATION_Y: 4,
+        TILT_OFFSET_Y: -6,
+        TILT_PERSPECTIVE: 800,
+        TYPING_SPEED_DELETING: 30,
+        TYPING_SPEED_NORMAL: 60,
+        TYPING_PAUSE_END: 2500,
+        TYPING_PAUSE_START: 400,
+        TYPING_INIT_DELAY: 1200,
+        FORM_RESET_DELAY_MS: 3000,
+        MAGNETIC_OFFSET_Y: -3,
+        MAGNETIC_FACTOR: 0.2
+    };
+
     // ── Touch device detection ──
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
@@ -27,12 +49,12 @@
         (entries) => {
             entries.forEach((entry, i) => {
                 if (entry.isIntersecting) {
-                    setTimeout(() => entry.target.classList.add('visible'), i * 80);
+                    setTimeout(() => entry.target.classList.add('visible'), i * CONFIG.REVEAL_STAGGER_MS);
                     revealObserver.unobserve(entry.target);
                 }
             });
         },
-        { threshold: 0.15 }
+        { threshold: CONFIG.REVEAL_THRESHOLD }
     );
     revealEls.forEach((el) => revealObserver.observe(el));
 
@@ -41,7 +63,7 @@
     let lastScroll = 0;
     window.addEventListener('scroll', () => {
         const y = window.scrollY;
-        navbar.classList.toggle('scrolled', y > 50);
+        navbar.classList.toggle('scrolled', y > CONFIG.NAVBAR_SCROLL_THRESHOLD);
         lastScroll = y;
     });
 
@@ -78,7 +100,7 @@
                 }
             });
         },
-        { rootMargin: '-40% 0px -55% 0px' }
+        { rootMargin: CONFIG.NAV_HIGHLIGHT_MARGIN }
     );
     sections.forEach((s) => highlightObserver.observe(s));
 
@@ -90,7 +112,7 @@
                 if (!entry.isIntersecting) return;
                 const el = entry.target;
                 const target = +el.dataset.count;
-                const duration = 1600;
+                const duration = CONFIG.STATS_DURATION_MS;
                 const start = performance.now();
                 const step = (now) => {
                     const progress = Math.min((now - start) / duration, 1);
@@ -102,7 +124,7 @@
                 counterObserver.unobserve(el);
             });
         },
-        { threshold: 0.5 }
+        { threshold: CONFIG.STATS_THRESHOLD }
     );
     counters.forEach((c) => counterObserver.observe(c));
 
@@ -110,7 +132,7 @@
     const heroBg = document.querySelector('.hero-bg');
     window.addEventListener('scroll', () => {
         if (window.scrollY < window.innerHeight) {
-            heroBg.style.transform = `translateY(${window.scrollY * 0.35}px)`;
+            heroBg.style.transform = `translateY(${window.scrollY * CONFIG.PARALLAX_FACTOR}px)`;
         }
     });
 
@@ -124,9 +146,9 @@
                 const y = e.clientY - rect.top;
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -4;
-                const rotateY = ((x - centerX) / centerX) * 4;
-                card.style.transform = `translateY(-6px) perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                const rotateX = ((y - centerY) / centerY) * CONFIG.TILT_ROTATION_X;
+                const rotateY = ((x - centerX) / centerX) * CONFIG.TILT_ROTATION_Y;
+                card.style.transform = `translateY(${CONFIG.TILT_OFFSET_Y}px) perspective(${CONFIG.TILT_PERSPECTIVE}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
             });
             card.addEventListener('mouseleave', () => {
                 card.style.transform = '';
@@ -157,22 +179,22 @@
                 charIdx++;
             }
 
-            let speed = deleting ? 30 : 60;
+            let speed = deleting ? CONFIG.TYPING_SPEED_DELETING : CONFIG.TYPING_SPEED_NORMAL;
 
             if (!deleting && charIdx === current.length) {
-                speed = 2500;
+                speed = CONFIG.TYPING_PAUSE_END;
                 deleting = true;
             } else if (deleting && charIdx === 0) {
                 deleting = false;
                 roleIdx = (roleIdx + 1) % roles.length;
-                speed = 400;
+                speed = CONFIG.TYPING_PAUSE_START;
             }
 
             setTimeout(typeLoop, speed);
         }
 
         // Start typing after reveal animation
-        setTimeout(typeLoop, 1200);
+        setTimeout(typeLoop, CONFIG.TYPING_INIT_DELAY);
     }
 
     // ── Smooth scroll for all anchor links ──
@@ -203,7 +225,7 @@
             btn.style.background = '';
             btn.style.boxShadow = '';
             form.reset();
-        }, 3000);
+        }, CONFIG.FORM_RESET_DELAY_MS);
     });
 
     // ── Magnetic effect on social links (desktop only) ──
@@ -213,7 +235,7 @@
                 const rect = link.getBoundingClientRect();
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
-                link.style.transform = `translateY(-3px) translate(${x * 0.2}px, ${y * 0.2}px)`;
+                link.style.transform = `translateY(${CONFIG.MAGNETIC_OFFSET_Y}px) translate(${x * CONFIG.MAGNETIC_FACTOR}px, ${y * CONFIG.MAGNETIC_FACTOR}px)`;
             });
             link.addEventListener('mouseleave', () => {
                 link.style.transform = '';
