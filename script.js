@@ -308,7 +308,7 @@
                 <div class="project-tags">
                     ${tagsHtml}
                 </div>
-                <a href="${url}" target="_blank" class="project-execute-btn">
+                <a href="${url}" target="_blank" rel="noopener noreferrer" class="project-execute-btn">
                     [EXECUTE <span class="arrow">→</span>]
                 </a>
             </div>
