@@ -5,6 +5,18 @@
     // ── GitHub Config ──
     const GITHUB_USERNAME = '12vicky08';
 
+    // ── Utility: Escape HTML to prevent XSS ──
+    const escapeHTML = (str) => {
+        if (!str) return '';
+        return String(str).replace(/[&<>"']/g, (m) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        })[m]);
+    };
+
     // ── Touch device detection ──
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
@@ -298,17 +310,17 @@
         card.className = 'project-card reveal';
         card.style.transitionDelay = `${0.05 + index * 0.07}s`;
 
-        const tagsHtml = tags.map(t => `<span>${t}</span>`).join('');
+        const tagsHtml = tags.map(t => `<span>${escapeHTML(t)}</span>`).join('');
 
         card.innerHTML = `
             <div class="project-scanline"></div>
             <div class="project-info">
-                <h3>${name}</h3>
-                <p>${description}</p>
+                <h3>${escapeHTML(name)}</h3>
+                <p>${escapeHTML(description)}</p>
                 <div class="project-tags">
                     ${tagsHtml}
                 </div>
-                <a href="${url}" target="_blank" class="project-execute-btn">
+                <a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer" class="project-execute-btn">
                     [EXECUTE <span class="arrow">→</span>]
                 </a>
             </div>
