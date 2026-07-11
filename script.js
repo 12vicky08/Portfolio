@@ -284,7 +284,7 @@
         },
 
         {
-            name: 'Django Todo App',
+            name: 'Django To-Do App',
             description: 'A full-stack Django to-do application with SQLite database, admin interface, Docker containerization, and Gunicorn/WhiteNoise serving.',
             tags: ['Python', 'Django', 'Docker', 'SQLite'],
             url: 'https://github.com/12vicky08/django'
