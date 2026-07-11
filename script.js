@@ -308,21 +308,47 @@
         card.className = 'project-card reveal';
         card.style.transitionDelay = `${0.05 + index * 0.07}s`;
 
-        const tagsHtml = tags.map(t => `<span>${t}</span>`).join('');
+        const scanline = document.createElement('div');
+        scanline.className = 'project-scanline';
 
-        card.innerHTML = `
-            <div class="project-scanline"></div>
-            <div class="project-info">
-                <h3>${name}</h3>
-                <p>${description}</p>
-                <div class="project-tags">
-                    ${tagsHtml}
-                </div>
-                <a href="${url}" target="_blank" rel="noopener noreferrer" class="project-execute-btn">
-                    [EXECUTE <span class="arrow">→</span>]
-                </a>
-            </div>
-        `;
+        const info = document.createElement('div');
+        info.className = 'project-info';
+
+        const h3 = document.createElement('h3');
+        h3.textContent = name;
+
+        const p = document.createElement('p');
+        p.textContent = description;
+
+        const tagsDiv = document.createElement('div');
+        tagsDiv.className = 'project-tags';
+        tags.forEach(t => {
+            const span = document.createElement('span');
+            span.textContent = t;
+            tagsDiv.appendChild(span);
+        });
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.className = 'project-execute-btn';
+        a.textContent = '[EXECUTE ';
+
+        const arrowSpan = document.createElement('span');
+        arrowSpan.className = 'arrow';
+        arrowSpan.textContent = '→';
+
+        a.appendChild(arrowSpan);
+        a.appendChild(document.createTextNode(']'));
+
+        info.appendChild(h3);
+        info.appendChild(p);
+        info.appendChild(tagsDiv);
+        info.appendChild(a);
+
+        card.appendChild(scanline);
+        card.appendChild(info);
 
         container.appendChild(card);
     }
