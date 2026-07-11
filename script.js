@@ -387,4 +387,9 @@
     // Load projects on page load
     loadProjects();
 
+    // Export for testing
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = { renderProjectCard };
+    }
+
 })();
