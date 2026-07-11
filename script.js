@@ -76,7 +76,7 @@
                 const id = '#' + entry.target.id;
                 if (linkMap[id]) {
                     if (entry.isIntersecting) {
-                        Object.values(linkMap).forEach((l) => l.classList.remove('active'));
+                        document.querySelector('.nav-link.active')?.classList.remove('active');
                         linkMap[id].classList.add('active');
                     }
                 }
