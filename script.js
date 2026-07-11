@@ -39,11 +39,6 @@
     // ── Navbar scroll state ──
     const navbar = document.getElementById('navbar');
     let lastScroll = 0;
-    window.addEventListener('scroll', () => {
-        const y = window.scrollY;
-        navbar.classList.toggle('scrolled', y > 50);
-        lastScroll = y;
-    });
 
     // ── Mobile menu toggle ──
     const menuToggle = document.getElementById('menu-toggle');
@@ -106,13 +101,34 @@
     );
     counters.forEach((c) => counterObserver.observe(c));
 
-    // ── Hero parallax ──
+    // ── Hero parallax & Scroll optimization ──
     const heroBg = document.querySelector('.hero-bg');
+    let winHeight = window.innerHeight;
+    let ticking = false;
+
+    window.addEventListener('resize', () => {
+        winHeight = window.innerHeight;
+    }, { passive: true });
+
     window.addEventListener('scroll', () => {
-        if (window.scrollY < window.innerHeight) {
-            heroBg.style.transform = `translateY(${window.scrollY * 0.35}px)`;
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                const y = window.scrollY;
+
+                // Navbar state
+                navbar.classList.toggle('scrolled', y > 50);
+                lastScroll = y;
+
+                // Hero parallax
+                if (y < winHeight && heroBg) {
+                    heroBg.style.transform = `translateY(${y * 0.35}px)`;
+                }
+
+                ticking = false;
+            });
+            ticking = true;
         }
-    });
+    }, { passive: true });
 
     // ── Tilt effect on skill & project cards (desktop only) ──
     if (!isTouchDevice) {
