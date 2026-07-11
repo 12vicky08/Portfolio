@@ -38,11 +38,16 @@
 
     // ── Navbar scroll state ──
     const navbar = document.getElementById('navbar');
-    let lastScroll = 0;
+    let tickingNavbar = false;
     window.addEventListener('scroll', () => {
-        const y = window.scrollY;
-        navbar.classList.toggle('scrolled', y > 50);
-        lastScroll = y;
+        if (!tickingNavbar) {
+            window.requestAnimationFrame(() => {
+                const y = window.scrollY;
+                navbar.classList.toggle('scrolled', y > 50);
+                tickingNavbar = false;
+            });
+            tickingNavbar = true;
+        }
     });
 
     // ── Mobile menu toggle ──
@@ -108,9 +113,16 @@
 
     // ── Hero parallax ──
     const heroBg = document.querySelector('.hero-bg');
+    let tickingParallax = false;
     window.addEventListener('scroll', () => {
-        if (window.scrollY < window.innerHeight) {
-            heroBg.style.transform = `translateY(${window.scrollY * 0.35}px)`;
+        if (!tickingParallax) {
+            window.requestAnimationFrame(() => {
+                if (window.scrollY < window.innerHeight) {
+                    heroBg.style.transform = `translateY(${window.scrollY * 0.35}px)`;
+                }
+                tickingParallax = false;
+            });
+            tickingParallax = true;
         }
     });
 
